@@ -8,17 +8,20 @@ public abstract class BaseActor<E> implements Actor, Runnable {
     private volatile boolean running = true;
 
     protected ArrayList<Actor> references = new ArrayList<>();
-    protected Actor lastSender = null;
+    protected ArrayList<Actor> receiveHistory = new ArrayList<>();
     protected List<E> state = new ArrayList<>();
 
+    public BaseActor(boolean createdFromOtherActor) {
+        if (createdFromOtherActor) start();
+    }
     @Override
     public void sendMessage(Actor recipient, Message message) {
         recipient.receiveMessage(message);
-        recipient.setLastSender(this);
+        recipient.addToSenderHistory(this);
     }
 
-   public void setLastSender(Actor sender) {
-        this.lastSender = sender;
+   public void addToSenderHistory(Actor sender) {
+        this.receiveHistory.add(sender);
    }
 
     @Override
@@ -55,4 +58,12 @@ public abstract class BaseActor<E> implements Actor, Runnable {
     }
 
     protected abstract void processMessage(Message message);
+
+    public void printStorage() {
+        System.out.println(state);
+    }
+
+    public List<E> getStorage() {
+        return state;
+    }
 }
