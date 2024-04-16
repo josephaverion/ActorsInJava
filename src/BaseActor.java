@@ -7,6 +7,7 @@ public abstract class BaseActor<E> implements Actor, Runnable {
     private Thread thread;
     private volatile boolean running = true;
 
+    protected ArrayList<Actor> references = new ArrayList<>();
     protected Actor lastSender = null;
     protected List<E> state = new ArrayList<>();
 
